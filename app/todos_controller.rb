@@ -89,7 +89,6 @@ class TodosController < UIViewController
   def add_todo
     todo_data = {text: @text_input.textFieldAtIndex(0).text, done: false}
     todo = Todo.post_json(todo_data)
-    puts todo.class
     @table.beginUpdates
     @todos.unshift(todo)
     indexPath = NSIndexPath.indexPathForRow(0, inSection: 0)

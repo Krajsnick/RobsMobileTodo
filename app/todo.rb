@@ -7,6 +7,9 @@ class Todo
     # Simulate latency
     # sleep 2
     data = NSData.dataWithContentsOfURL(uri)
+    unless data
+      return [{text: "Server is unreachable", done: false, error: true}]
+    end
     puts "Data retrieved"
 
     error_ptr = Pointer.new(:object)
