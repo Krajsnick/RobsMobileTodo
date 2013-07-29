@@ -87,8 +87,11 @@ class TodosController < UIViewController
   end
 
   def add_todo
+    todo_data = {text: @text_input.textFieldAtIndex(0).text, done: false}
+    todo = Todo.post_json(todo_data)
+    puts todo.class
     @table.beginUpdates
-    @todos.unshift({text: @text_input.textFieldAtIndex(0).text, done: false})
+    @todos.unshift(todo)
     indexPath = NSIndexPath.indexPathForRow(0, inSection: 0)
     @table.insertRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimationFade)
     @table.endUpdates

@@ -33,7 +33,10 @@ class Todo
 
 
     responseHeader = Pointer.new(:object)
-    NSURLConnection.sendSynchronousRequest(request, returningResponse: responseHeader, error: error_ptr)
+    # get back raw data
+    response = NSURLConnection.sendSynchronousRequest(request, returningResponse: responseHeader, error: error_ptr)
+    # decode the data and return json hash object
+    NSJSONSerialization.JSONObjectWithData(response, options:NSJSONReadingMutableContainers, error: error_ptr)
   end
 
 end
