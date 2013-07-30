@@ -45,7 +45,6 @@ class Todo
     # get back raw data
     response = NSURLConnection.sendSynchronousRequest(request, returningResponse: responseHeader, error: error_ptr)
     # decode the data and return json hash object
-    response = NSURLConnection.sendSynchronousRequest(request, returningResponse: responseHeader, error: error_ptr)
     NSJSONSerialization.JSONObjectWithData(response, options:NSJSONReadingMutableContainers, error: error_ptr)
   end
 
