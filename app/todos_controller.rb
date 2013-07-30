@@ -4,6 +4,8 @@ class TodosController < UIViewController
 
     self.title = "Todos"
 
+    self.navigationController.navigationBar.tintColor = "#2ba6cb".to_color
+
     toolbar = UIToolbar.alloc.initWithFrame([[0, 1], [100, 44]])
     add_button = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAdd,
                                                                    target: self,
