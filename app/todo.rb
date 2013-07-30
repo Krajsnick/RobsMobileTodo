@@ -1,12 +1,12 @@
 class Todo
-  URL = "http://localhost:3000/"
+  SERVER_URL = "http://localhost:3000/"
 
   def self.get_json
-    uri = NSURL.URLWithString("#{URL}todos.json") 
+    url = NSURL.URLWithString("#{SERVER_URL}todos.json") 
 
     # Simulate latency
     # sleep 2
-    data = NSData.dataWithContentsOfURL(uri)
+    data = NSData.dataWithContentsOfURL(url)
     unless data
       return [{text: "Server is unreachable", done: false, error: true}]
     end
@@ -20,19 +20,25 @@ class Todo
 
   end
 
-  def self.post_json(todo_text)
-    uri = NSURL.URLWithString("#{URL}todos")
-    request = NSMutableURLRequest.requestWithURL(uri,
+  def self.post_json(post_data, method = "POST")
+    if method == "POST"
+      uri = "todos"
+    else
+      uri = "todos/#{post_data}" # method == delete use id in url
+    end
+    url = NSURL.URLWithString("#{SERVER_URL + uri}")
+    request = NSMutableURLRequest.requestWithURL(url,
                                                  cachePolicy: NSURLRequestUseProtocolCachePolicy,
                                                  timeoutInterval: 60.0)
-    error_ptr = Pointer.new(:object)
-    data = NSJSONSerialization.dataWithJSONObject(todo_text, options: 0, error: error_ptr)
-
-    request.setHTTPMethod("POST")
+    request.setHTTPMethod(method)
     request.setValue("application/json", forHTTPHeaderField: "Accept")
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue(data.length.to_s, forHTTPHeaderField: "Content-Length")
-    request.setHTTPBody(data)
+    error_ptr = Pointer.new(:object)
+    if method == "POST"
+      data = NSJSONSerialization.dataWithJSONObject(post_data, options: 0, error: error_ptr)
+      request.setValue(data.length.to_s, forHTTPHeaderField: "Content-Length")
+      request.setHTTPBody(data)
+    end
 
 
     responseHeader = Pointer.new(:object)

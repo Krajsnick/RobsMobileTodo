@@ -63,7 +63,8 @@ class TodosController < UIViewController
 
   def tableView(tableView, commitEditingStyle: editingStyle, forRowAtIndexPath: indexPath)
     if editingStyle == UITableViewCellEditingStyleDelete
-      puts "Deleting from backend"
+      todo = @todos[indexPath.row][:id]
+      Todo.post_json(todo, "DELETE")
       @todos.delete_at(indexPath.row)
       @table.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimationFade)
     end
