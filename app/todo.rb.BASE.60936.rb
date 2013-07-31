@@ -2,7 +2,6 @@ class Todo
   SERVER_URL = "http://localhost:3000/"
 
   def self.get_json
-
     url = NSURL.URLWithString("#{SERVER_URL}todos.json") 
 
     # Simulate latency
@@ -22,16 +21,11 @@ class Todo
   end
 
   def self.post_json(post_data, method = "POST")
-
-    uri = case method
-          when "POST"
-            "todos"
-          when "DELETE"
-            "todos/#{post_data}"
-          when "PATCH"
-            "todos/#{post_data[:id]}"
-          end
-
+    if method == "POST"
+      uri = "todos"
+    else
+      uri = "todos/#{post_data}" # method == delete use id in url
+    end
     url = NSURL.URLWithString("#{SERVER_URL + uri}")
     request = NSMutableURLRequest.requestWithURL(url,
                                                  cachePolicy: NSURLRequestUseProtocolCachePolicy,
@@ -40,7 +34,7 @@ class Todo
     request.setValue("application/json", forHTTPHeaderField: "Accept")
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     error_ptr = Pointer.new(:object)
-    unless method == "DELETE"
+    if method == "POST"
       data = NSJSONSerialization.dataWithJSONObject(post_data, options: 0, error: error_ptr)
       request.setValue(data.length.to_s, forHTTPHeaderField: "Content-Length")
       request.setHTTPBody(data)

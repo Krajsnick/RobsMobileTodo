@@ -28,8 +28,13 @@ class Todo
             "todos"
           when "DELETE"
             "todos/#{post_data}"
+<<<<<<< HEAD
+          when "PUT"
+            "todos/#{post_data[:id}"
+=======
           when "PATCH"
             "todos/#{post_data[:id]}"
+>>>>>>> put-method
           end
 
     url = NSURL.URLWithString("#{SERVER_URL + uri}")

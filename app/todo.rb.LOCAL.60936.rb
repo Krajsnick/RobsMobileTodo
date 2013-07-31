@@ -28,8 +28,8 @@ class Todo
             "todos"
           when "DELETE"
             "todos/#{post_data}"
-          when "PATCH"
-            "todos/#{post_data[:id]}"
+          when "PUT"
+            "todos/#{post_data[:id}"
           end
 
     url = NSURL.URLWithString("#{SERVER_URL + uri}")
@@ -40,7 +40,7 @@ class Todo
     request.setValue("application/json", forHTTPHeaderField: "Accept")
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
     error_ptr = Pointer.new(:object)
-    unless method == "DELETE"
+    if method == "POST"
       data = NSJSONSerialization.dataWithJSONObject(post_data, options: 0, error: error_ptr)
       request.setValue(data.length.to_s, forHTTPHeaderField: "Content-Length")
       request.setHTTPBody(data)
