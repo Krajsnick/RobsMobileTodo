@@ -28,7 +28,7 @@ class Todo
             "todos"
           when "DELETE"
             "todos/#{post_data}"
-          when "PUT"
+          when "PATCH"
             "todos/#{post_data[:id]}"
           end
 
