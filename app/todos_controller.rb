@@ -21,6 +21,7 @@ class TodosController < UIViewController
     @table = UITableView.alloc.initWithFrame(self.view.bounds)
     @table.dataSource = self
     @table.delegate = self
+    setup_gesture_rec
     self.view.addSubview @table
     @todos = Todo.get_json
   end
@@ -40,10 +41,6 @@ class TodosController < UIViewController
   def tableView(tableView, willDisplayCell: cell, forRowAtIndexPath: indexPath)
     cell.backgroundColor = UIColor.greenColor if @todos[indexPath.row][:done]
   end
-
-  # def numberOfSectionsInTableView(tableView)
-  # 1
-  # end
 
   def tableView(tableView, numberOfRowsInSection: section)
     @todos.count 
@@ -99,6 +96,19 @@ class TodosController < UIViewController
     @table.endUpdates
   end
 
+  def toggle_done(gesture)
+    if gesture.state == UIGestureRecognizerStateBegan
+      point = gesture.locationInView(@table)
+      indexPath = @table.indexPathForRowAtPoint(point)
+      todo = @todos[indexPath.row]
+      todo[:done] = todo[:done] == false ? true : false # toggle true/false
+      # Only send what's needed to server
+      json_data = todo.select { |k,v| k == "id" || k == "done" }
+      Todo.post_json(json_data, "PATCH")
+      @table.reloadData
+    end
+  end
+
   def textFieldShouldReturn(textField)
     # If user tries to enter an empty t0do
     unless textField.text.empty?
@@ -108,7 +118,11 @@ class TodosController < UIViewController
     else
       false
     end
-    # @text_input.dismissWithClickedButtonIndex(@text_input.firstOtherButtonIndex, animated: true)
+  end
+
+  def setup_gesture_rec
+    gesture = UILongPressGestureRecognizer.alloc.initWithTarget(self, action: 'toggle_done:')
+    @table.addGestureRecognizer(gesture)
   end
 
 end
