@@ -1,5 +1,5 @@
 class Todo
-  SERVER_URL = "http://localhost:3000/"
+  SERVER_URL = "http://todo.ahlbergproductions.com/"
 
   def self.get_json
 

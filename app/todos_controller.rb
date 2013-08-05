@@ -6,24 +6,28 @@ class TodosController < UIViewController
 
     self.navigationController.navigationBar.tintColor = "#2ba6cb".to_color
 
-    toolbar = UIToolbar.alloc.initWithFrame([[0, 1], [100, 44]])
     add_button = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemAdd,
                                                                    target: self,
                                                                    action: 'show_text_input')
     add_button.style = UIBarButtonItemStyleBordered
-    # toolbar.setItems([self.editButtonItem, add_button])
     refresh_button = UIBarButtonItem.alloc.initWithBarButtonSystemItem(UIBarButtonSystemItemRefresh,
                                                                        target:self,
                                                                        action:'refresh_data')
     self.navigationItem.leftBarButtonItem = refresh_button
     self.navigationItem.setRightBarButtonItems([add_button, self.editButtonItem], animated: false)
 
-    @table = UITableView.alloc.initWithFrame(self.view.bounds)
-    @table.dataSource = self
-    @table.delegate = self
-    setup_gesture_rec
+    @table = setup_table_view
     self.view.addSubview @table
+    setup_gesture_rec
     @todos = Todo.get_json
+  end
+
+  def setup_table_view
+    table = UITableView.alloc.initWithFrame(self.view.bounds)
+    table.dataSource = self
+    table.delegate = self
+    table.separatorStyle = UITableViewCellSeparatorStyleNone
+    table
   end
 
   def tableView(tableView, cellForRowAtIndexPath: indexPath)
@@ -39,7 +43,14 @@ class TodosController < UIViewController
   end
 
   def tableView(tableView, willDisplayCell: cell, forRowAtIndexPath: indexPath)
-    cell.backgroundColor = UIColor.greenColor if @todos[indexPath.row][:done]
+    cell.textLabel.textColor = UIColor.whiteColor
+    cell.backgroundColor = UIColor.clearColor
+    cell.backgroundView = UIImageView.alloc.initWithFrame([[0, 0], [320, 44]])
+    if @todos[indexPath.row][:done]
+      cell.backgroundView.image = UIImage.imageNamed("done_bg.png")
+    else
+      cell.backgroundView.image = UIImage.imageNamed("cell_bg.png")
+    end
   end
 
   def tableView(tableView, numberOfRowsInSection: section)
