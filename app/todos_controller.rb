@@ -27,6 +27,8 @@ class TodosController < UIViewController
     table.dataSource = self
     table.delegate = self
     table.separatorStyle = UITableViewCellSeparatorStyleNone
+    bg_view = UIImageView.alloc.initWithImage(UIImage.imageNamed("table_bg.png"))
+    table.backgroundView = bg_view
     table
   end
 
