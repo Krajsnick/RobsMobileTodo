@@ -54,6 +54,7 @@ class TodosController < UIViewController
   end
 
   def tableView(tableView, numberOfRowsInSection: section)
+    self.title = "Todos #{self.completed_todos}/#{self.number_of_todos}"
     @todos.count 
   end
 
@@ -136,4 +137,11 @@ class TodosController < UIViewController
     @table.addGestureRecognizer(gesture)
   end
 
+  def number_of_todos
+    @todos.length
+  end
+
+  def completed_todos
+    @todos.select { |hsh| hsh[:done] }.count
+  end
 end
